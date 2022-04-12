@@ -9,20 +9,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
       # The first JDK set up gets to be "primary".
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 8
-      - name: save JAVA_HOME as JDK8 for later usage
-        run: echo "ORG_GRADLE_PROJECT_jdk8=$JAVA_HOME" >> $GITHUB_ENV
-      # The second JDK is not first in the path but does reset JAVA_HOME
-      - name: Set up JDK 1.7
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 7
-      - name: save JAVA_HOME as JDK7 for later usage
-        run: echo "ORG_GRADLE_PROJECT_jdk7=$JAVA_HOME" >> $GITHUB_ENV
-      # JDK 11
+      # even though we are setting up Java 11 here, it is not being used by by the toolchain
+      # this can be verified by checking the JAVA_HOME_11.0.??_x64 envvar value and the values on the Check toolchains cmd
       - name: Set up JDK 11
         uses: actions/setup-java@v1.4.3
         with:
@@ -30,29 +18,30 @@ jobs:
       - name: save JAVA_HOME as JDK11 for later usage
         run: echo "ORG_GRADLE_PROJECT_jdk11=$JAVA_HOME" >> $GITHUB_ENV
       # Java is installed; document settings
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 8
+      - name: save JAVA_HOME as JDK8 for later usage
+        run: echo "ORG_GRADLE_PROJECT_jdk8=$JAVA_HOME" >> $GITHUB_ENV
       - name: log project settings
         run: |
           echo "--- Java versions ---"
-          $ORG_GRADLE_PROJECT_jdk7/bin/java -version
           $ORG_GRADLE_PROJECT_jdk8/bin/java -version
           $ORG_GRADLE_PROJECT_jdk11/bin/java -version
-      - name: correct JAVA_HOME
-        run: echo "JAVA_HOME=$ORG_GRADLE_PROJECT_jdk8" >> $GITHUB_ENV
       # Restore the gradle cache
       - uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          # The docs say to use hashfiles, but gradle itself is smart enough to
-          # re-download dependencies if it couldn't resolve them.
-          # Because our gradle cache is _so big_, I think a 90% cache is far
-          # better than a 0% cache.
           key: ${{ runner.os }}-gradle
           restore-keys: |
             ${{ runner.os }}-gradle
+      # JDKs listed here do not match the Java 11 that was setup earlier
       - name: Check toolchains
         run: ./gradlew -q javaToolchains
+      # And the problem is that the Javadoc is not being created using Java 11.0.14, which has a fix for a Jszip vulnerability
       - name: Create Javadoc
         run: ./gradlew javadoc
       - name: Capture Javadoc
