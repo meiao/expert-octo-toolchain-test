@@ -44,10 +44,10 @@ jobs:
             ${{ runner.os }}-gradle
       # JDKs listed here do not match the Java 11 that was setup earlier
       - name: Check toolchains
-        run: ./gradlew -q javaToolchains
+        run: ./gradlew -Porg.gradle.java.installations.auto-detect=false -Porg.gradle.java.installations.fromEnv=JDK8,JDK11 -q javaToolchains
       # And the problem is that the Javadoc is not being created using Java 11.0.14, which has a fix for a Jszip vulnerability
       - name: Create Javadoc
-        run: ./gradlew javadoc
+        run: ./gradlew -Porg.gradle.java.installations.auto-detect=false -Porg.gradle.java.installations.fromEnv=JDK8,JDK11 javadoc
       - name: Capture Javadoc
         uses: actions/upload-artifact@v2
         with:
