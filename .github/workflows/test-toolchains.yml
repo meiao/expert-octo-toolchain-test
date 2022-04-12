@@ -3,7 +3,7 @@ name: Test toolchain
 on: workflow_dispatch
 
 jobs:
-  publish_release:
+  test_toolchain:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

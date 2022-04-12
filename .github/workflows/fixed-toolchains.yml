@@ -3,7 +3,7 @@ name: Fixed toolchain
 on: workflow_dispatch
 
 jobs:
-  publish_release:
+  fixed_toolchain:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
