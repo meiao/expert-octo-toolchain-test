@@ -58,5 +58,29 @@ So Gradle's toolchain does not see the JDKs installed by `setup-java`.
 
 ## Workaround
 
+[fixed-toolchains.yml](.github/workflows/fixed-toolchains.yml) has a few changes that fixes this behavior.
 
-[fixed-toolchains.yml](.github/workflows/fixed-toolchains.yml)
+
+### Disabling auto detection
+
+The first change is to disable auto-detection for toolchains, so it won't use a Java that it finds laying around in the GHA machine. It is also necessary because auto-detected JDKs have precedence over custom ones.
+
+This is done by adding `-Porg.gradle.java.installations.auto-detect=false` to all Gradle command lines or by adding `org.gradle.java.installations.auto-detect=false` into your `gradle.properties`.
+
+More information on [Gradle's documentation](https://docs.gradle.org/current/userguide/toolchains.html#sub:disable_auto_detect).
+
+
+### Custom toolchain location
+
+The second change is to tell Gradle where to look for the JDKs. This can be done using one of two properties:
+
+- org.gradle.java.installations.fromEnv or;
+- org.gradle.java.installations.paths
+
+Both of them can be used in the command line (adding the `-P` prefix) or in `gradle.properties`.
+
+Adding `-Porg.gradle.java.installations.fromEnv=JDK8,JDK11` will tell Gradle to look into the environment variables `JDK8` and `JDK11` for JDK homes.
+
+Or `-Porg.gradle.java.installations.paths=/path/to/jdk8,/path/to/jdk11` will tell Gradle to look into those folder for the JDK homes.
+
+More information on [Gradle's documentation](https://docs.gradle.org/current/userguide/toolchains.html#sec:custom_loc).
