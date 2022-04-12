@@ -3,7 +3,7 @@ A small repo to test the interaction between Github Actions and Gradle toolchain
 
 ## Background
 
-When generating Javadocs, older JDKs use a version of Jszip that has a vulnerability, and this has been fixed in Java 11.0.14.
+When generating Javadocs, older JDKs use a version of Jszip that has a vulnerability. This has been fixed in Java 11.0.14.
 
 There is a project that (mostly) has to be compiled with Java 8. To generate an improved Javadoc documentation it generates the Javadoc using Java 11. This is configured using Gradle's toolchain and works fine on developer machines.
 
