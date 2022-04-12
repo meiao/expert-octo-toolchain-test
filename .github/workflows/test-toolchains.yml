@@ -56,8 +56,6 @@ jobs:
       - name: Create Javadoc
         run: ./gradlew javadoc
       - name: Capture Javadoc
-        # If previous step fails, run this step regardless
-        if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
           name: javadoc
