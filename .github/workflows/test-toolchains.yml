@@ -54,7 +54,7 @@ jobs:
       - name: Check toolchains
         run: ./gradlew -q javaToolchains
       - name: Create Javadoc
-        run: ./gradlew javadocJar
+        run: ./gradlew javadoc
       - name: Capture Javadoc
         # If previous step fails, run this step regardless
         if: ${{ failure() }}
