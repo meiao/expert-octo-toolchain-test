@@ -29,9 +29,11 @@ jobs:
           echo "--- Java versions ---"
           $JDK8/bin/java -version
           $JDK11/bin/java -version
-      # JDKs listed here do not match the Java 11 that was setup earlier
+      - name: Set Gradle options
+        run: echo "GRADLE_OPTIONS=-Porg.gradle.java.installations.auto-detect=false -Porg.gradle.java.installations.fromEnv=JDK8,JDK11" >> $GITHUB_ENV
+      # JDKs listed here do match the ones that were setup earlier
       - name: Check toolchains
-        run: ./gradlew -Porg.gradle.java.installations.auto-detect=false -Porg.gradle.java.installations.fromEnv=JDK8,JDK11 -q javaToolchains
+        run: ./gradlew $GRADLE_OPTIONS -q javaToolchains
       # And the problem is that the Javadoc is not being created using Java 11.0.14, which has a fix for a Jszip vulnerability
       - name: Create Javadoc
         run: ./gradlew -Porg.gradle.java.installations.auto-detect=false -Porg.gradle.java.installations.fromEnv=JDK8,JDK11 javadoc
