@@ -29,15 +29,6 @@ jobs:
           echo "--- Java versions ---"
           $JDK8/bin/java -version
           $JDK11/bin/java -version
-      # Restore the gradle cache
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle
-          restore-keys: |
-            ${{ runner.os }}-gradle
       # JDKs listed here do not match the Java 11 that was setup earlier
       - name: Check toolchains
         run: ./gradlew -Porg.gradle.java.installations.auto-detect=false -Porg.gradle.java.installations.fromEnv=JDK8,JDK11 -q javaToolchains
